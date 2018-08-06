@@ -5,10 +5,11 @@
 The function **address_split(str)**, from the module **addsplit.py** is written on Python 2.7. It takes the string of an address and splits it on separate fields: street name and street number.
 It is also provided an input file with typical address lines, including difficult cases, and the **main.py** script for a test.
 
-**address_split():**
+**( street , house ) = address_split( address )**
 
-    **Input:** string of address
-    **Output:** string of street and string of street-number
+   **Input:** string of address
+   
+   **Output:** string of street and string of street-number
 
 ### Precondition
 
