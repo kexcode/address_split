@@ -1,4 +1,4 @@
-from address_split import address_split
+from addsplit import address_split
 
 # import data for testing
 with open('input.txt') as test_data_file:
