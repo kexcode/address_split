@@ -16,7 +16,7 @@ def is_house_format(string):
 
 def address_split(address):
     pattern_split = re.compile("[.,\s]*", re.UNICODE) # whitespace elements && ,. +
-    pattern_number = re.compile("( No)|( Number)|( Nummer)|( Num)|( No.)")
+    pattern_number = re.compile("(No)|(Num[bm]er)|(Num)|(Nr)")
 
     line = address.strip()
     array = pattern_split.split(line)
@@ -29,15 +29,18 @@ def address_split(address):
         if not is_house_format(array[-1]): #if the last elements doesn't match house number pattern
             if is_first_dec(array[-2]):    #if previous starts with decimal, e.g. "24 A"
                 street = " ".join(array[:-2])
-                street = re.sub(pattern_number, "", street) # remove No. if found
-                house = "{} {}".format(array[-2], array[-1])
+                house = " ".join(array[-2:])
                 return street, house
             else:   #both text elements -> assuming that number goes first
                 house = str(array[0])
                 street = " ".join(array[1:])
                 return street, house
         else:
-            street = " ".join(array[:-1])
-            street = re.sub(pattern_number, "", street) # remove No. if found
-            house = str(array[-1])
-            return street, house
+            if re.match(pattern_number, array[-2]): # e.g. "No 127"
+                street = " ".join(array[:-2])
+                house = " ".join(array[-2:])
+                return street, house
+            else:   # number is on the last place
+                street = " ".join(array[:-1])
+                house = str(array[-1])
+                return street, house
