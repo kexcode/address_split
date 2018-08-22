@@ -8,20 +8,41 @@ def is_first_dec(string):
         return False
 
 def is_house_format(string):
-    pattern_house = re.compile("[\d]+[- \w]*") # 123 b | 123-b | 123-125
+    pattern_house = re.compile("[\d]+[-/ ]*[\w]*") # 123 b | 123-b | 123-125 | 123/b
     if re.match(pattern_house, string):
         return True
     else:
         return False
 
+def contains_street(string):
+    pattern_street = re.compile("(str)|(av)|(rue)|(calle)|(weg)|(lein)", re.IGNORECASE) # having identificators
+    if re.search(pattern_street, string):
+        return True
+    else:
+        return False
+
 def address_split(address):
-    pattern_split = re.compile("[.,\s]*", re.UNICODE) # whitespace elements && ,. +
+    pattern_split = re.compile("[,\s]*", re.UNICODE) # whitespace elements && , +
     pattern_number = re.compile("(No)|(Num[bm]er)|(Num)|(Nr)")
 
     line = address.strip()
+    # splitting by 1st ", " if exists
+    if (re.search(", ", line)):
+        array = line.split(", ", 1)
+        if contains_street(array[0]) or not re.search("\d+", array[0]):
+            street = array[0]
+            house = array[1]
+            return street, house
+        else:
+            street = array[1]
+            house = array[0]
+            return street, house
+
     array = pattern_split.split(line)
 
-    if len(array) == 2:
+    if len(array) < 2:
+        raise ValueError("Empty line or just one argument!")
+    elif len(array) == 2:
         street = str(array[0])
         house = str(array[1])
         return street, house
